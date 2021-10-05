@@ -1,5 +1,5 @@
 use alloc::format;
-use anyhow::{bail, ensure};
+use anyhow::{anyhow, bail, ensure};
 use ripemd160::Ripemd160;
 use sha2::{Digest, Sha256, Sha512, Sha512Trunc256};
 use sha3::Sha3_512;
@@ -68,7 +68,7 @@ fn do_length(length: LengthOp, data: &[u8]) -> Result<Hash> {
 }
 
 fn proto_len(length: usize) -> Result<Hash> {
-    let size: u64 = length.try_into()?;
+    let size: u64 = length.try_into().map_err(|e| anyhow!("{}", e))?;
     let mut len = Hash::new();
     prost::encoding::encode_varint(size, &mut len);
     Ok(len)
