@@ -1,10 +1,10 @@
 [package]
-name = "ics23"
+name = "informalsystems-ics23"
 version = "0.6.5"
 authors = ["Ethan Frey <ethanfrey@users.noreply.github.com>"]
 edition = "2018"
 exclude = ["codegen"]
-description = "Merkle proof verification library - implements Cosmos ICS23 Spec"
+description = "Temporary fork for internal use. Use the `ics23` crate instead."
 repository = "https://github.com/confio/ics23/tree/master/rust"
 license = "Apache-2.0"
 
