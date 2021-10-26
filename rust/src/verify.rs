@@ -7,9 +7,9 @@ use crate::helpers::Result;
 use crate::ics23;
 use crate::ops::{apply_inner, apply_leaf};
 use alloc::format;
-use std::vec::Vec;
+use alloc::vec::Vec;
 
-pub type CommitmentRoot = ::std::vec::Vec<u8>;
+pub type CommitmentRoot = ::alloc::vec::Vec<u8>;
 
 pub fn verify_existence(
     proof: &ics23::ExistenceProof,
@@ -263,9 +263,7 @@ mod tests {
     use super::*;
     use crate::api;
     use crate::ics23::{ExistenceProof, HashOp, InnerOp, LeafOp, LengthOp, ProofSpec};
-    use std::collections::btree_map::BTreeMap as HashMap;
-    #[cfg(not(feature = "std"))]
-    use std::prelude::*;
+    use alloc::collections::btree_map::BTreeMap as HashMap;
 
     #[test]
     fn calculate_root_from_leaf() {

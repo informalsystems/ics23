@@ -1,7 +1,4 @@
-use std::collections::btree_map::BTreeMap;
-
-#[cfg(not(feature = "std"))]
-use std::prelude::*;
+use alloc::collections::btree_map::BTreeMap;
 
 use crate::compress::{decompress, is_compressed};
 use crate::ics23;
@@ -207,18 +204,17 @@ pub fn tendermint_spec() -> ics23::ProofSpec {
 #[cfg(feature = "std")]
 #[cfg(test)]
 mod tests {
-    extern crate std as _std;
+    extern crate std;
+
     use super::*;
 
-    #[cfg(feature = "std")]
-    use _std::fs::File;
-    #[cfg(feature = "std")]
-    use _std::io::prelude::*;
     use alloc::string::String;
+    use alloc::vec::Vec;
     use anyhow::{bail, ensure};
     use prost::Message;
     use serde::Deserialize;
-    use std::vec::Vec;
+    use std::fs::File;
+    use std::io::prelude::*;
 
     use crate::compress::compress;
     use crate::helpers::Result;
@@ -237,7 +233,6 @@ mod tests {
         pub value: Option<Vec<u8>>,
     }
 
-    #[cfg(feature = "std")]
     fn load_file(filename: &str) -> Result<(ics23::CommitmentProof, RefData)> {
         let mut file = File::open(filename)?;
         let mut contents = String::new();
@@ -260,7 +255,6 @@ mod tests {
         Ok((parsed, data))
     }
 
-    #[cfg(feature = "std")]
     fn verify_test_vector(filename: &str, spec: &ics23::ProofSpec) -> Result<()> {
         let (proof, data) = load_file(filename)?;
 
@@ -276,90 +270,77 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_left() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/exist_left.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_right() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/exist_right.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_middle() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/exist_middle.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_left_non() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/nonexist_left.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_right_non() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/nonexist_right.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_middle_non() -> Result<()> {
         let spec = iavl_spec();
         verify_test_vector("../testdata/iavl/nonexist_middle.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_left() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/exist_left.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_right() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/exist_right.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_middle() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/exist_middle.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_left_non() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/nonexist_left.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_right_non() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/nonexist_right.json", &spec)
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_middle_non() -> Result<()> {
         let spec = tendermint_spec();
         verify_test_vector("../testdata/tendermint/nonexist_middle.json", &spec)
     }
 
-    #[cfg(feature = "std")]
     fn load_batch(files: &[&str]) -> Result<(ics23::CommitmentProof, Vec<RefData>)> {
         let mut entries = Vec::new();
         let mut data = Vec::new();
@@ -415,7 +396,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_batch_exist() -> Result<()> {
         let spec = iavl_spec();
         let (proof, data) = load_batch(&[
@@ -430,7 +410,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn compressed_iavl_batch_exist() -> Result<()> {
         let spec = iavl_spec();
         let (proof, data) = load_batch(&[
@@ -446,7 +425,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_iavl_batch_nonexist() -> Result<()> {
         let spec = iavl_spec();
         let (proof, data) = load_batch(&[
@@ -461,7 +439,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn compressed_iavl_batch_nonexist() -> Result<()> {
         let spec = iavl_spec();
         let (proof, data) = load_batch(&[
@@ -477,7 +454,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_batch_exist() -> Result<()> {
         let spec = tendermint_spec();
         let (proof, data) = load_batch(&[
@@ -492,7 +468,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "std")]
     fn test_vector_tendermint_batch_nonexist() -> Result<()> {
         let spec = tendermint_spec();
         let (proof, data) = load_batch(&[
